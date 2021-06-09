@@ -6,8 +6,9 @@ const loaders = [
     include: [resolve("src")],
     exclude: /node_modules/,
     use: [
+      'cache-loader',
       "babel-loader"
-    ]
+    ],
   },
   {
     test: /\.(scss|css)$/,
@@ -55,7 +56,7 @@ const loaders = [
     test: /\.(ts|tsx)?$/,
     use: 'ts-loader',
     exclude: /node_modules/,
-  },
+  }
 ]
 
 module.exports = {

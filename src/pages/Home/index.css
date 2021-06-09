@@ -1,0 +1,66 @@
+@font-face {
+  font-family: 'iconfont';  /* Project id 2603519 */
+  src: url('//at.alicdn.com/t/font_2603519_bjq8ug7xbef.woff2?t=1623231302223') format('woff2'),
+      url('//at.alicdn.com/t/font_2603519_bjq8ug7xbef.woff?t=1623231302223') format('woff'),
+      url('//at.alicdn.com/t/font_2603519_bjq8ug7xbef.ttf?t=1623231302223') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.home {
+  color: #8a9099;
+}
+
+.action-area {
+  display: flex;
+  width: 100%;
+  height: 50vh;
+}
+
+.menus {
+  width: 10%;
+  background: #212224;
+  min-width: 150px;
+}
+
+.menu {
+  list-style: none;
+  padding: 3px 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.menu-text {
+  font-size: 14px;
+  margin-left: 20px;
+}
+
+.menu-active {
+  background: #323337;
+}
+
+.resource-content {
+  width: 40%;
+  background: #252628;
+}
+
+.preview-panel {
+  width: 50%;
+  background: #212224;
+}
+
+.timeline {
+  width: 100%;
+  height: 50vh;
+  background: #34363B;
+}
