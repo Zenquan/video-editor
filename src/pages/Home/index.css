@@ -54,9 +54,34 @@
   background: #252628;
 }
 
+.video-prew {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.video-prew-cover {
+  width: 140px;
+  height: 80px;
+  margin: 20px;
+}
+
 .preview-panel {
   width: 50%;
   background: #212224;
+}
+
+.video-source {
+  width: 100%;
+  height: 100%;
+}
+
+.video-item {
+  width: 180px;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .timeline {

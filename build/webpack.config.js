@@ -32,7 +32,12 @@ module.exports = {
     port: 5000,
     hot: true,
     proxy: {
-
+      '/api' : {/* web-service总入口 */
+        target: 'http://127.0.0.1:3000/',
+        pathRewrite: { '^/api': '' },
+        secure: false,
+        changeOrigin: true,
+      },
     },
     inline: true,
 	  historyApiFallback: true
