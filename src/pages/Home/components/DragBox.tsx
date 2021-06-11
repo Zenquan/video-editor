@@ -1,19 +1,19 @@
-import React, { CSSProperties, ReactElement, FC } from 'react'
+import React, { ReactNode, FC } from 'react'
 import { useDrag } from 'react-dnd'
 import { ItemTypes } from './ItemTypes'
 
-export interface BoxProps {
+export interface DragBoxProps {
   name?: string,
-  children?: ReactElement | String | Number
+  children: ReactNode
 }
 
 interface DropResult {
   name: string
 }
 
-const Box: FC<React.PropsWithChildren<BoxProps>> = ({ name, children }) => {
+const DragBox: FC<React.PropsWithChildren<DragBoxProps>> = ({ name, children }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.BOX,
+    type: ItemTypes.DragBox,
     item: { name },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>()
@@ -31,15 +31,13 @@ const Box: FC<React.PropsWithChildren<BoxProps>> = ({ name, children }) => {
   return (
     <div
       ref={drag}
-      role="Box"
+      role="DragBox"
       style={{ opacity }}
-      data-testid={`box-${name}`}
+      data-testid={`DragBox-${name}`}
     >
-      {
-        children ? children : name
-      }
+      {children}
     </div>
   )
 }
 
-export default Box;
+export default DragBox;

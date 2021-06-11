@@ -1,5 +1,5 @@
 const ItemTypes = {
-  BOX: 'box',
+  DragBox: 'box',
 }
 
 export {

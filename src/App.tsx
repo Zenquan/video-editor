@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
-import './App.css';
+import { GlobalStyle } from './App.style';
 import AppRouter from './router';
 
 const App: FC = () => {
   return (
     <div className="App">
-      <AppRouter />
+      <GlobalStyle/>
+      <AppRouter/>
     </div>
   );
 };

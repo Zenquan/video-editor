@@ -7,7 +7,7 @@ const webpack = require('webpack'),
 
 const plugins = [
   new HtmlWebpackPlugin({
-    title: 'Hello react + ts',
+    title: '视频编辑器',
     template: resolve('public/index.html'),
     vendor: [
       resolve('lib/dll_react.js'),

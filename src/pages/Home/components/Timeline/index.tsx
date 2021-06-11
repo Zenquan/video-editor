@@ -1,10 +1,17 @@
 import React, { FC } from 'react'
 import { useDrop } from 'react-dnd'
-import { ItemTypes } from './ItemTypes'
+import { TimelineWrapper, ToolBar } from './index.style';
+import { ItemTypes } from '../ItemTypes'
 
-const Timeline: FC = () => {
+interface TimelineProps {
+  vFrames: string[],
+  duration: number,
+  slideValue: number
+}
+
+const Timeline: FC<TimelineProps> = ({vFrames, duration, slideValue}) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: ItemTypes.BOX,
+    accept: ItemTypes.DragBox,
     drop: () => ({ name: 'Dustbin' }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -21,10 +28,13 @@ const Timeline: FC = () => {
   }
 
   return (
-    <div ref={drop} role={'Dustbin'} style={{ backgroundColor }}
-      className="timeline">
+    <TimelineWrapper ref={drop} role={'timeline'} style={{ backgroundColor }}
+      >
+      <ToolBar>
+        <div>{slideValue} / {duration}</div>
+      </ToolBar>
       {isActive ? 'Release to drop' : 'Drag a box here'}
-    </div>
+    </TimelineWrapper>
   )
 }
 

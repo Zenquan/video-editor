@@ -1,121 +1,204 @@
-import React, { FC, ReactNode, useState, useEffect, useCallback } from 'react';
+import React, { FC, useState, useEffect, useRef } from "react";
 import { observer } from "mobx-react";
-import { Player, ControlBar, ClosedCaptionButton } from 'video-react';
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { home } from 'services/index'
-import Box from './Box'
-import Timeline from './Timeline'
-import './index.css'
-
-type Menu = {
-  icon: ReactNode,
-  text: string
-}
-
-type Menus = Array<Menu>
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import ReactPlayer from "react-player";
+import { home } from "services/index";
+import Menus, { MenusType } from "./components/Menus";
+import ResourceContent from "./components/ResourceContent";
+import Timeline from "./components/Timeline";
+import {
+  HomeWrapper,
+  ActionArea,
+  Previewpanel,
+  Controller,
+  BtnWrapper,
+} from "./index.style";
 
 const Home: FC = observer(() => {
   const [currentMenu, setCurrentMenu] = useState<number>(0);
-  const [videoSrc, setVideoSrc] = useState<string>("http://www.w3schools.com/html/mov_bbb.mp4")
-  const [videoList, setVideoList] = useState<Array<{
-    url: string,
-    name: string
-  }>>([])
+  const [videoSrc, setVideoSrc] = useState<string>(
+    "http://www.w3schools.com/html/mov_bbb.mp4"
+  );
+  const [resourceList, setResourceList] = useState<
+    Array<{
+      url: string;
+      name: string;
+    }>
+  >([]);
+  const playerRef = useRef<any>(null);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [slideValue, setSlideValue] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+
+  const [vFrames, setVFrames] = useState([]);
 
   const ffmpeg = createFFmpeg({ log: true });
-  const transcode = async ({ target: { files }}: { target: { files: File[] }}) => {
+  const transcode = async ({
+    target: { files },
+  }: {
+    target: { files: File[] };
+  }) => {
     const { name } = files[0];
     await ffmpeg.load();
-    ffmpeg.FS('writeFile', name, await fetchFile(files[0]));
-    await ffmpeg.run('-i', name,  'output.mp4');
-    const data = ffmpeg.FS('readFile', 'output.mp4');
-    setVideoSrc(URL.createObjectURL(new Blob([data.buffer], { type: 'video/mp4' })));
+    ffmpeg.FS("writeFile", name, await fetchFile(files[0]));
+    await ffmpeg.run("-i", name, "output.mp4");
+    const data = ffmpeg.FS("readFile", "output.mp4");
+    setVideoSrc(
+      URL.createObjectURL(new Blob([data.buffer], { type: "video/mp4" }))
+    );
+  };
+
+  const menus: MenusType = [
+    { icon: <i className="iconfont icon-ziyuan">&#xeebf;</i>, text: "资源库" },
+    { icon: <i className="iconfont icon-wenben">&#xe649;</i>, text: "文本" },
+    { icon: <i className="iconfont icon-zimu">&#xe69e;</i>, text: "字幕" },
+    { icon: <i className="iconfont icon-yinle">&#xe90e;</i>, text: "音乐" },
+  ];
+
+  const playBackwardStep = () => {
+    handleSliderChange(0)
+  };
+
+  const playerback = () => {
+    slideValue && handleSliderChange(slideValue - 1)
+  };
+
+  const playOrPause = () => {
+    setPlaying(!playing);
+  };
+
+  const playerforward = () => {
+    slideValue < duration && handleSliderChange(slideValue + 1)
+  };
+
+  const playerForwardStep = () => {
+    handleSliderChange(duration)
+  };
+
+  // 视频进度条改变
+  const handleSliderChange = (value: number)=> {
+    setSlideValue(value) // 设置进度条当前值
+    if (playerRef && playerRef.current) {
+      playerRef.current.seekTo(parseFloat(''+value))
+    }  // 改变视频进度
+  };
+
+    // 视频总时长
+  const handleDuration = (duration: number) => {
+    setDuration(duration)
   }
 
-  const menus: Menus = [
-    {icon: <i className="iconfont icon-ziyuan">&#xeebf;</i>, text: '资源库'},
-    {icon: <i className="iconfont icon-wenben">&#xe649;</i>, text: '文本'},
-    {icon: <i className="iconfont icon-zimu">&#xe69e;</i>, text: '字幕'},
-    {icon: <i className="iconfont icon-yinle">&#xe90e;</i>, text: '音乐'}
-  ]
-
-  const handleSwitchMenu = (
-      e: React.MouseEvent,
-      index: number
-    ) => {
-    setCurrentMenu(index)
+  // 当前播放进度
+  const handleProgress = (value: {
+    playedSeconds: number
+  }) => {
+    console.log('value>>>', value);
+    setSlideValue(value.playedSeconds) // 设置进度条当前值
+    if (value.playedSeconds === duration) {
+      setPlaying(false)
+    }
   }
+
+  const controls = [
+    {
+      icon: (
+        <i className="iconfont icon-player-backward-step icon-player">
+          &#xea2d;
+        </i>
+      ),
+      fn: playBackwardStep,
+    },
+    {
+      icon: (
+        <i className="iconfont icon-playerback_filled icon-player">&#xe6c1;</i>
+      ),
+      fn: playerback,
+    },
+    {
+      icon: playing ? (
+        <i className="iconfont icon-player-play icon-player">&#xea2e;</i>
+      ) : (
+        <i className="iconfont icon-player-pause icon-player">&#xea2b;</i>
+      ),
+      fn: playOrPause,
+    },
+    {
+      icon: (
+        <i className="iconfont icon-playerforward_filled icon-player">
+          &#xe6c0;
+        </i>
+      ),
+      fn: playerforward,
+    },
+    {
+      icon: (
+        <i className="iconfont icon-player-forward-step icon-player">
+          &#xea2c;
+        </i>
+      ),
+      fn: playerForwardStep,
+    },
+  ];
 
   const fetch = async () => {
-    const videoList = await home.getlist()
-    console.log('videoList>>>', videoList);
-    setVideoList(videoList)
-  }
+    const resourceList = await home.getlist();
+    console.log("resourceList>>>", resourceList);
+    setResourceList(resourceList);
+  };
+
+  const getcurrentMenu = (currentMenu: number) => {
+    setCurrentMenu(currentMenu);
+  };
 
   useEffect(() => {
-    fetch()
-  }, [])
+    fetch();
+  }, []);
 
   return (
-    <div className="home">
-      <div className="action-area">
-        <div className="menus">
-          {
-            menus && menus.map((memu: Menu, index) => {
-              const { icon, text } = memu
-              return (
-                <li key={index}
-                  className={
-                    currentMenu === index
-                      ? 'menu menu-active'
-                      : "menu"
-                  }
-                  onClick={(e: React.MouseEvent) => handleSwitchMenu(e, index)}
-                  >
-                  {icon}
-                  <p className="menu-text'">{text}</p>
-                </li>
-              )
-            })
-          }
-        </div>
-        <div className="resource-content">
-          <div className="video-prew">
-            {/* <input type="file" id="uploader" onChange={(e: any) => transcode(e)}/> */}
-            <DndProvider backend={HTML5Backend}>
-              {
-                videoList && videoList.map((video, index) => {
-                  const { name, url } = video;
-                  return (<Box key={index}>
-                    <div className="video-item">
-                      <img src={url} alt="" className="video-prew-cover"/>
-                      {name}
-                    </div>
-                  </Box>)
-                })
-              }
-            </DndProvider>
-          </div>
-        </div>
-        <div className="preview-panel">
-          <Player
-            fluid={false}
+    <HomeWrapper>
+      <ActionArea>
+        <Menus menus={menus} getcurrentMenu={getcurrentMenu} />
+        <ResourceContent
+          currentMenu={currentMenu}
+          resourceList={resourceList}
+        />
+        <Previewpanel>
+          <ReactPlayer
+            ref={playerRef}
+            url={videoSrc}
             width={"100%"}
             height={"100%"}
-            src={videoSrc}
-          >
-            <ControlBar autoHide={false}>
-              <ClosedCaptionButton order={7} />
-            </ControlBar>
-          </Player>
-        </div>
-      </div>
-    <DndProvider backend={HTML5Backend}>
-      <Timeline/>
-    </DndProvider>
-  </div>)
+            playing={playing}
+            onDuration={handleDuration}
+            onSeek={e => console.log('onSeek', e)} // 当媒体使用seconds参数搜索时调用
+            progressInterval={100} // onProgress 回调的速度  太大会导致进度条走动不平滑
+            onProgress={handleProgress}
+            onError={e => console.error(e)}
+          ></ReactPlayer>
+          <Controller>
+            <BtnWrapper>
+              {controls &&
+                controls.map((control, index: number) => {
+                  const { icon, fn } = control;
+                  return (
+                    <div onClick={fn} key={index}>
+                      {icon}
+                    </div>
+                  );
+                })}
+            </BtnWrapper>
+          </Controller>
+        </Previewpanel>
+      </ActionArea>
+      <DndProvider backend={HTML5Backend}>
+        <Timeline vFrames={vFrames}
+          slideValue={slideValue}
+          duration={duration} />
+      </DndProvider>
+    </HomeWrapper>
+  );
 });
 
 export default Home;
