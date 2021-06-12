@@ -94,7 +94,6 @@ const Home: FC = observer(() => {
   const handleProgress = (value: {
     playedSeconds: number
   }) => {
-    console.log('value>>>', value);
     setSlideValue(value.playedSeconds) // 设置进度条当前值
     if (value.playedSeconds === duration) {
       setPlaying(false)
@@ -143,14 +142,39 @@ const Home: FC = observer(() => {
   ];
 
   const fetch = async () => {
-    const resourceList = await home.getlist();
-    console.log("resourceList>>>", resourceList);
-    setResourceList(resourceList);
+    // const resourceList = await home.getlist();
+    // console.log("resourceList>>>", resourceList);
+    setResourceList([
+      {
+        "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "name": "mov_bbb.mp4"
+      },
+      {
+          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+          "name": "mov_bbb.mp4"
+      },
+      {
+          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+          "name": "mov_bbb.mp4"
+      },
+      {
+          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+          "name": "mov_bbb.mp4"
+      },
+      {
+          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+          "name": "mov_bbb.mp4"
+      }
+    ]);
   };
 
   const getcurrentMenu = (currentMenu: number) => {
     setCurrentMenu(currentMenu);
   };
+
+  const getSlideValue = (slideValue: number) => {
+    handleSliderChange(slideValue)
+  }
 
   useEffect(() => {
     fetch();
@@ -195,7 +219,8 @@ const Home: FC = observer(() => {
       <DndProvider backend={HTML5Backend}>
         <Timeline vFrames={vFrames}
           slideValue={slideValue}
-          duration={duration} />
+          duration={duration}
+          getSlideValue={getSlideValue}/>
       </DndProvider>
     </HomeWrapper>
   );
