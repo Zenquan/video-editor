@@ -1,6 +1,5 @@
 import React, { FC, useState, useEffect, useRef } from "react";
 import { observer } from "mobx-react";
-import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import ReactPlayer from "react-player";
@@ -8,6 +7,7 @@ import { home } from "services/index";
 import Menus, { MenusType } from "./components/Menus";
 import ResourceContent from "./components/ResourceContent";
 import Timeline from "./components/Timeline";
+import { homeStore } from 'stores'
 import {
   HomeWrapper,
   ActionArea,
@@ -18,38 +18,21 @@ import {
 
 const Home: FC = observer(() => {
   const [currentMenu, setCurrentMenu] = useState<number>(0);
-  const [videoSrc, setVideoSrc] = useState<string>(
-    "http://www.w3schools.com/html/mov_bbb.mp4"
-  );
+  const [videoSrc, setVideoSrc] = useState<string>('http://www.w3schools.com/html/mov_bbb.mp4');
   const [resourceList, setResourceList] = useState<
     Array<{
       url: string;
       name: string;
     }>
   >([]);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<ReactPlayer>(null);
   const [playing, setPlaying] = useState<boolean>(false);
   const [slideValue, setSlideValue] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
+  const [blobs, setBlobs] = useState<Blob[]>([])
+  const [vFrames, setVFrames] = useState<string[]>([]);
 
-  const [vFrames, setVFrames] = useState([]);
-
-  const ffmpeg = createFFmpeg({ log: true });
-  const transcode = async ({
-    target: { files },
-  }: {
-    target: { files: File[] };
-  }) => {
-    const { name } = files[0];
-    await ffmpeg.load();
-    ffmpeg.FS("writeFile", name, await fetchFile(files[0]));
-    await ffmpeg.run("-i", name, "output.mp4");
-    const data = ffmpeg.FS("readFile", "output.mp4");
-    setVideoSrc(
-      URL.createObjectURL(new Blob([data.buffer], { type: "video/mp4" }))
-    );
-  };
-
+  const isActive = homeStore.getIsActive();
   const menus: MenusType = [
     { icon: <i className="iconfont icon-ziyuan">&#xeebf;</i>, text: "资源库" },
     { icon: <i className="iconfont icon-wenben">&#xe649;</i>, text: "文本" },
@@ -67,6 +50,9 @@ const Home: FC = observer(() => {
 
   const playOrPause = () => {
     setPlaying(!playing);
+    if (!playing) {
+      // drawFrame()
+    }
   };
 
   const playerforward = () => {
@@ -168,7 +154,7 @@ const Home: FC = observer(() => {
     ]);
   };
 
-  const getcurrentMenu = (currentMenu: number) => {
+  const getCurrentMenu = (currentMenu: number) => {
     setCurrentMenu(currentMenu);
   };
 
@@ -176,20 +162,89 @@ const Home: FC = observer(() => {
     handleSliderChange(slideValue)
   }
 
+  const saveFrame = (blob: Blob) => {
+    console.log('blob>>>', blob);
+    blobs.push(blob)
+    setBlobs(blobs)
+  }
+
+  const drawFrame = () => {
+    const canvas: {
+      width: number,
+      height: number,
+      getContext: Function,
+      toBlob: Function
+    } = document.createElement('canvas'),
+      ctx = canvas.getContext('2d');
+    console.log('canvas>>>', canvas,);
+    if (playerRef && playerRef.current) {
+      setPlaying(false)
+      const video = playerRef.current
+      canvas.width = 200
+      canvas.height = 50
+      const player = document.getElementById('player'),
+        img = new Image();
+      img.setAttribute("crossOrigin",'Anonymous')
+      ctx.drawImage(player?.childNodes[0], 0, 0);
+      img.src = canvas.toBlob(saveFrame, 'image/jpeg');
+      console.log('img>>>', img);
+      if (slideValue < duration) {
+        setPlaying(true)
+      }
+    }
+  }
+  const revokeURL = (e: React.MouseEvent) => {
+    URL.revokeObjectURL(videoSrc);
+  }
+
+  const onend = (e: React.MouseEvent) => {
+    var img: HTMLImageElement;
+    // do whatever with the frames
+    for (var i = 0; i < blobs.length; i++) {
+      if (i % 10 === 0) {
+        console.log('array[i]>>>', blobs[i]);
+        img = new Image();
+        img.setAttribute("crossOrigin",'Anonymous')
+        img.onload = revokeURL;
+        img.src = URL.createObjectURL(blobs[i]);
+        console.log('img>>>', img);
+        // document.getElementById('vframs').appendChild(img);
+      }
+    }
+    // we don't need the video's objectURL anymore
+    URL.revokeObjectURL(videoSrc);
+  }
+
+  const setVFrame = () => {
+    if (isActive) {
+      setVFrames([
+        "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+      ])
+    }
+  }
+
   useEffect(() => {
     fetch();
-  }, []);
+    setVFrame()
+  }, [isActive]);
 
   return (
     <HomeWrapper>
+      {console.log('blobs>>>', blobs)}
       <ActionArea>
-        <Menus menus={menus} getcurrentMenu={getcurrentMenu} />
+        <Menus menus={menus} getCurrentMenu={getCurrentMenu} />
         <ResourceContent
           currentMenu={currentMenu}
           resourceList={resourceList}
         />
         <Previewpanel>
           <ReactPlayer
+            id={'player'}
             ref={playerRef}
             url={videoSrc}
             width={"100%"}
@@ -220,7 +275,8 @@ const Home: FC = observer(() => {
         <Timeline vFrames={vFrames}
           slideValue={slideValue}
           duration={duration}
-          getSlideValue={getSlideValue}/>
+          getSlideValue={getSlideValue}
+          />
       </DndProvider>
     </HomeWrapper>
   );

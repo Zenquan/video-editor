@@ -4,6 +4,7 @@ const TimelineWrapper = styled.div`
   width: 100%;
   height: 50vh;
   background: #34363b;
+  position: relative;
 `
 
 const ToolBar = styled.div`
@@ -31,6 +32,8 @@ const ProgressLine = styled.div`
   content: '';
   cursor: col-resize;
   position: relative;
+  user-select: auto;
+  z-index: 10;
   &::before {
     content: '';
     border-left: 10px solid transparent;
@@ -42,9 +45,21 @@ const ProgressLine = styled.div`
   }
 `
 
+const Vframes = styled.div`
+  position: absolute;
+  top: 60px;
+  left: 31px;
+  display: flex;
+  .v-frame {
+    width: 200px;
+    height: 50px;
+  }
+`
+
 export {
   TimelineWrapper,
   ToolBar,
   ProgressLine,
-  TracksBox
+  TracksBox,
+  Vframes
 }

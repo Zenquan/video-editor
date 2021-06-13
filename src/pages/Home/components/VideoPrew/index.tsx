@@ -19,7 +19,6 @@ interface VideoPrewProps {
 const VideoPrew: FC<VideoPrewProps> = ({videoList}) => {
   return (
     <VideoViewWrapper>
-      {/* <input type="file" id="uploader" onChange={(e: any) => transcode(e)}/> */}
       <DndProvider backend={HTML5Backend}>
         {
           videoList && videoList.map((video: VideoType, index) => {

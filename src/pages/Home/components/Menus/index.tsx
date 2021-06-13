@@ -13,17 +13,17 @@ export type MenusType = Array<Menu>
 
 interface MenusProps {
   menus: MenusType,
-  getcurrentMenu: Function
+  getCurrentMenu: Function
 }
 
-const Menus: FC<MenusProps> = ({menus, getcurrentMenu}) => {
+const Menus: FC<MenusProps> = ({menus, getCurrentMenu}) => {
   const [currentMenu, setCurrentMenu] = useState<number>(0);
   const handleSwitchMenu = (
     e: React.MouseEvent,
     index: number
     ) => {
     setCurrentMenu(index)
-    getcurrentMenu(index)
+    getCurrentMenu(index)
   }
 
   return (
