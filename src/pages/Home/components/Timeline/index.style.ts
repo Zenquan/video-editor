@@ -1,11 +1,10 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const TimelineWrapper = styled.div`
   width: 100%;
-  height: 50vh;
   background: #34363b;
   position: relative;
-`
+`;
 
 const ToolBar = styled.div`
   display: flex;
@@ -19,11 +18,11 @@ const ToolBar = styled.div`
   .slide-value {
     color: #fff;
   }
-`
+`;
 
 const TracksBox = styled.div`
   padding-left: 30px;
-`
+`;
 
 const ProgressLine = styled.div`
   width: 1px;
@@ -43,18 +42,20 @@ const ProgressLine = styled.div`
     left: 50%;
     transform: translateX(-50%);
   }
-`
+`;
 
 const Vframes = styled.div`
   position: absolute;
   top: 60px;
   left: 31px;
   display: flex;
+  width: calc(100% - 30px);
+  overflow-y: auto;
   .v-frame {
     width: 200px;
     height: 50px;
   }
-`
+`;
 
 export {
   TimelineWrapper,
@@ -62,4 +63,4 @@ export {
   ProgressLine,
   TracksBox,
   Vframes
-}
+};

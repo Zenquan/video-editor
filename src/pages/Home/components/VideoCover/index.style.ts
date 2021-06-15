@@ -26,8 +26,8 @@ const VideoViewWrapper = styled.div`
     align-items: center;
   }
 
-`
+`;
 
 export {
   VideoViewWrapper
-}
+};

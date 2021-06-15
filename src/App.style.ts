@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -16,8 +16,8 @@ const GlobalStyle = createGlobalStyle`
     height: 24px;
     line-height: 24px;
   }
-`
+`;
 
 export {
   GlobalStyle
-}
+};

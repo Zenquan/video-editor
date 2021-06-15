@@ -12,7 +12,7 @@ const MenusWrapper = styled.div`
   .menu-active {
     background: #323337;
   }
-`
+`;
 
 const MenuItem = styled.li`
   list-style: none;
@@ -21,9 +21,9 @@ const MenuItem = styled.li`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-`
+`;
 
 export {
   MenusWrapper,
   MenuItem
-}
+};

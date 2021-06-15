@@ -7,7 +7,7 @@ interface TimelineProps {
   vFrames: string[];
   duration: number;
   slideValue: number;
-  getSlideValue: Function;
+  getSlideValue: (value: number) => void;
   video?: CanvasImageSource;
 }
 
@@ -16,12 +16,12 @@ const Timeline: FC<TimelineProps> = ({
   duration,
   slideValue,
   getSlideValue,
-  video
-}) => {
+  video,
+}: TimelineProps) => {
   const [posLeft, setPosLeft] = useState(30);
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+  const [{ canDrop, isOver, }, drop] = useDrop(() => ({
     accept: ItemTypes.DragBox,
-    drop: () => ({ name: "Dustbin" }),
+    drop: () => ({ name: "Dustbin", }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -41,15 +41,13 @@ const Timeline: FC<TimelineProps> = ({
     ev: React.DragEvent & { target: { id: string } }
   ) => {
     ev.dataTransfer.setData("Text", ev.target.id);
-    console.log("handle_start-拖动开始");
   };
 
   const handleProgressDragEnd = (ev: React.MouseEvent) => {
-    console.log("end ev>>>", ev);
+    console.log('ev>>>', ev);
   };
 
   const handleProgressDrag = (ev: React.MouseEvent) => {
-    console.log("over ev>>>", ev);
     const slideValue: number = ((ev.pageX - 30) * duration) / 800;
     if (slideValue < duration) {
       setPosLeft(ev.pageX);
@@ -60,7 +58,7 @@ const Timeline: FC<TimelineProps> = ({
   const handleProgressDrop = (e: React.DragEvent) => {
     e.stopPropagation(); // 不再派发事件。解决Firefox浏览器，打开新窗口的问题。
     e.preventDefault();
-    let returnObj = e.dataTransfer.getData("Text");
+    const returnObj = e.dataTransfer.getData("Text");
     if (returnObj) {
       console.log("returnObj>>>", returnObj);
       // e.target.appendChild(document.getElementById(returnObj))
@@ -110,12 +108,12 @@ const Timeline: FC<TimelineProps> = ({
 
   useEffect(() => {
     setPosLeft(30 + 800 * (slideValue / duration));
-    renderVideoFrames()
+    renderVideoFrames();
     console.log('vFrames>>>', vFrames);
   }, [slideValue, duration, vFrames]);
 
   return (
-    <TimelineWrapper ref={drop} role={"timeline"} style={{ backgroundColor }}>
+    <TimelineWrapper ref={drop} role={"timeline"} style={{ backgroundColor, }}>
       <ToolBar>
         <div className="progress-value">
           <span className="slide-value">{util.renderTime(slideValue)}</span>/
@@ -124,7 +122,7 @@ const Timeline: FC<TimelineProps> = ({
       </ToolBar>
       <ProgressLine
         draggable="true"
-        style={{ transform: `translateX(${posLeft}px)` }}
+        style={{ transform: `translateX(${posLeft}px)`, }}
         onDragStart={handleProgressDragStart}
         onDragEnd={handleProgressDragEnd}
         onDrag={handleProgressDrag}

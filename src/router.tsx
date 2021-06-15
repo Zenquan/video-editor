@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, ReactNode } from "react";
+import React, { Suspense, lazy } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import { history } from 'utils';
 import { Spin } from 'antd';
@@ -18,9 +18,9 @@ const routes: Array<{component: any, path?: string}> = [
 ];
 
 
-const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+const antIcon = <LoadingOutlined style={{ fontSize: 24, }} spin />;
 
-export default function AppRouter() {
+export default function AppRouter () {
   return (
     <Router history={history}>
       <Suspense fallback={

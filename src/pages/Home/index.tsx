@@ -7,7 +7,7 @@ import { home } from "services/index";
 import Menus, { MenusType } from "./components/Menus";
 import ResourceContent from "./components/ResourceContent";
 import Timeline from "./components/Timeline";
-import { homeStore } from 'stores'
+import { homeStore } from 'stores';
 import {
   HomeWrapper,
   ActionArea,
@@ -20,10 +20,10 @@ const Home: FC = observer(() => {
   const [currentMenu, setCurrentMenu] = useState<number>(0);
   const [videoSrc, setVideoSrc] = useState<string>('http://www.w3schools.com/html/mov_bbb.mp4');
   const [resourceList, setResourceList] = useState<
-    Array<{
-      url: string;
-      name: string;
-    }>
+  Array<{
+    url: string;
+    name: string;
+  }>
   >([]);
   const playerRef = useRef<ReactPlayer>(null);
   const [playing, setPlaying] = useState<boolean>(false);
@@ -34,18 +34,18 @@ const Home: FC = observer(() => {
 
   const isActive = homeStore.getIsActive();
   const menus: MenusType = [
-    { icon: <i className="iconfont icon-ziyuan">&#xeebf;</i>, text: "资源库" },
-    { icon: <i className="iconfont icon-wenben">&#xe649;</i>, text: "文本" },
-    { icon: <i className="iconfont icon-zimu">&#xe69e;</i>, text: "字幕" },
-    { icon: <i className="iconfont icon-yinle">&#xe90e;</i>, text: "音乐" },
+    { icon: <i className="iconfont icon-ziyuan">&#xeebf;</i>, text: "资源库", },
+    { icon: <i className="iconfont icon-wenben">&#xe649;</i>, text: "文本", },
+    { icon: <i className="iconfont icon-zimu">&#xe69e;</i>, text: "字幕", },
+    { icon: <i className="iconfont icon-yinle">&#xe90e;</i>, text: "音乐", }
   ];
 
   const playBackwardStep = () => {
-    handleSliderChange(0)
+    handleSliderChange(0);
   };
 
   const playerback = () => {
-    slideValue && handleSliderChange(slideValue - 1)
+    slideValue && handleSliderChange(slideValue - 1);
   };
 
   const playOrPause = () => {
@@ -56,35 +56,35 @@ const Home: FC = observer(() => {
   };
 
   const playerforward = () => {
-    slideValue < duration && handleSliderChange(slideValue + 1)
+    slideValue < duration && handleSliderChange(slideValue + 1);
   };
 
   const playerForwardStep = () => {
-    handleSliderChange(duration)
+    handleSliderChange(duration);
   };
 
   // 视频进度条改变
   const handleSliderChange = (value: number)=> {
-    setSlideValue(value) // 设置进度条当前值
+    setSlideValue(value); // 设置进度条当前值
     if (playerRef && playerRef.current) {
-      playerRef.current.seekTo(parseFloat(''+value))
+      playerRef.current.seekTo(parseFloat('' + value));
     }  // 改变视频进度
   };
 
-    // 视频总时长
+  // 视频总时长
   const handleDuration = (duration: number) => {
-    setDuration(duration)
-  }
+    setDuration(duration);
+  };
 
   // 当前播放进度
   const handleProgress = (value: {
     playedSeconds: number
   }) => {
-    setSlideValue(value.playedSeconds) // 设置进度条当前值
+    setSlideValue(value.playedSeconds); // 设置进度条当前值
     if (value.playedSeconds === duration) {
-      setPlaying(false)
+      setPlaying(false);
     }
-  }
+  };
 
   const controls = [
     {
@@ -133,23 +133,23 @@ const Home: FC = observer(() => {
     setResourceList([
       {
         "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
-        "name": "mov_bbb.mp4"
+        "name": "mov_bbb.mp4",
       },
       {
-          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
-          "name": "mov_bbb.mp4"
+        "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "name": "mov_bbb.mp4",
       },
       {
-          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
-          "name": "mov_bbb.mp4"
+        "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "name": "mov_bbb.mp4",
       },
       {
-          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
-          "name": "mov_bbb.mp4"
+        "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "name": "mov_bbb.mp4",
       },
       {
-          "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
-          "name": "mov_bbb.mp4"
+        "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
+        "name": "mov_bbb.mp4",
       }
     ]);
   };
@@ -159,61 +159,8 @@ const Home: FC = observer(() => {
   };
 
   const getSlideValue = (slideValue: number) => {
-    handleSliderChange(slideValue)
-  }
-
-  const saveFrame = (blob: Blob) => {
-    console.log('blob>>>', blob);
-    blobs.push(blob)
-    setBlobs(blobs)
-  }
-
-  const drawFrame = () => {
-    const canvas: {
-      width: number,
-      height: number,
-      getContext: Function,
-      toBlob: Function
-    } = document.createElement('canvas'),
-      ctx = canvas.getContext('2d');
-    console.log('canvas>>>', canvas,);
-    if (playerRef && playerRef.current) {
-      setPlaying(false)
-      const video = playerRef.current
-      canvas.width = 200
-      canvas.height = 50
-      const player = document.getElementById('player'),
-        img = new Image();
-      img.setAttribute("crossOrigin",'Anonymous')
-      ctx.drawImage(player?.childNodes[0], 0, 0);
-      img.src = canvas.toBlob(saveFrame, 'image/jpeg');
-      console.log('img>>>', img);
-      if (slideValue < duration) {
-        setPlaying(true)
-      }
-    }
-  }
-  const revokeURL = (e: React.MouseEvent) => {
-    URL.revokeObjectURL(videoSrc);
-  }
-
-  const onend = (e: React.MouseEvent) => {
-    var img: HTMLImageElement;
-    // do whatever with the frames
-    for (var i = 0; i < blobs.length; i++) {
-      if (i % 10 === 0) {
-        console.log('array[i]>>>', blobs[i]);
-        img = new Image();
-        img.setAttribute("crossOrigin",'Anonymous')
-        img.onload = revokeURL;
-        img.src = URL.createObjectURL(blobs[i]);
-        console.log('img>>>', img);
-        // document.getElementById('vframs').appendChild(img);
-      }
-    }
-    // we don't need the video's objectURL anymore
-    URL.revokeObjectURL(videoSrc);
-  }
+    handleSliderChange(slideValue);
+  };
 
   const setVFrame = () => {
     if (isActive) {
@@ -225,8 +172,8 @@ const Home: FC = observer(() => {
         "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
         "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
       ])
-    }
-  }
+    };
+  };
 
   useEffect(() => {
     fetch();
