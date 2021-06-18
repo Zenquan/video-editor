@@ -3,26 +3,39 @@ const webpack = require('webpack'),
   { resolve } = require('./utils'),
   FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin'),
   BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
-  { isProd } = require('./utils')
+  WebpackBar = require("webpackbar"),
+  { isProd } = require('./utils');
 
-const plugins = [
-  new HtmlWebpackPlugin({
-    title: '视频编辑器',
-    template: resolve('public/index.html'),
-    vendor: [
-      resolve('lib/dll_react.js'),
-      resolve('lib/ffmpeg.min.js')
-    ]
-  }),
+const basePlugins = [
   new webpack.HotModuleReplacementPlugin(),
   new FriendlyErrorsPlugin(),
+  new WebpackBar(),
+];
+
+const devPlugins = [
+  new HtmlWebpackPlugin({
+    title: 'Hello react + ts',
+    template: resolve('public/index.html')
+  }),
+];
+
+const prodPlugins = [
+  new HtmlWebpackPlugin({
+    title: 'Hello react + ts',
+    template: resolve('public/index.html'),
+    env: 'production',
+    minify: true,
+    vendor: resolve('lib/dll_react.js')
+  }),
   new webpack.DllReferencePlugin({
     // 描述 react 动态链接库的文件内容
-    manifest: require('../lib/react-mainfest.json'),
+    manifest: require(resolve('lib/react-mainfest.json')),
   }),
-  isProd ? new BundleAnalyzerPlugin() : () => {},
-]
+  new BundleAnalyzerPlugin()
+];
+
+const plugins = isProd ? basePlugins.concat(prodPlugins) : basePlugins.concat(devPlugins);
 
 module.exports = {
   plugins
-}
+};

@@ -128,8 +128,8 @@ const Home: FC = observer(() => {
   ];
 
   const fetch = async () => {
-    // const resourceList = await home.getlist();
-    // console.log("resourceList>>>", resourceList);
+    const resourceList = await home.getlist();
+    console.log("resourceList>>>", resourceList);
     setResourceList([
       {
         "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",

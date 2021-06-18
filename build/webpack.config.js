@@ -1,9 +1,9 @@
-const { resolve } = require('./utils'),
+const { resolve, isProd } = require('./utils'),
   { loaders } = require('./loaders'),
-  { plugins } = require('./plugins')
+  { plugins } = require('./plugins'),
+  portfinder = require('portfinder');
 
-module.exports = {
-  devtool: "inline-source-map",
+const baseConfig = {
   entry: {
     app: "./src/index.tsx"
   },
@@ -17,7 +17,7 @@ module.exports = {
     alias: {
       '@': resolve('src'),
       'pages': resolve('src/pages'),
-      'utils': resolve('src/utils'),
+      'utils': resolve('src/utils/index.ts'),
       'services': resolve('src/services'),
       'stores': resolve('src/stores')
     },
@@ -26,26 +26,33 @@ module.exports = {
   module: {
     rules: loaders
   },
+  target: "web",
+};
+
+const devConfig = Object.assign(baseConfig, {
+  devtool: "inline-source-map",
   devServer: {
     contentBase: './dist',
     host: '127.0.0.1',
-    port: 5000,
+    port: process.env.PORT || 5000,
     hot: true,
     proxy: {
-      '/api' : {/* web-service总入口 */
-        target: 'http://127.0.0.1:3000/',
-        pathRewrite: { '^/api': '' },
+      '/api/activity': {
+        target: 'http://h5-activity.dubbox.test.thejoyrun.com',
+        pathRewrite: { '^/api/activity': '', },
         secure: false,
         changeOrigin: true,
       },
     },
     inline: true,
-	  historyApiFallback: true
+    historyApiFallback: true
   },
   watchOptions: {
     ignored: 'node_modules/**'
   },
-  target: "web",
+});
+
+const prodConfig = Object.assign(baseConfig, {
   optimization: {
     splitChunks: {
       chunks: 'async',
@@ -69,4 +76,18 @@ module.exports = {
       },
     },
   },
-}
+});
+
+module.exports = new Promise((resolve, reject) =>  {
+  portfinder.getPort((err, port) => {
+    if(err){
+      reject(err);
+      return;
+    }
+
+    //端口被占用时就重新设置evn和devServer的端口
+    devConfig.devServer.port = process.env.PORT = port;
+
+    resolve(isProd ? prodConfig : devConfig);
+  });
+});

@@ -55,6 +55,6 @@ module.exports = {
     "id-length": 0,
     "camelcase": 0,
     "new-cap": ["error", { "capIsNew": false, }],
-    "eslint-disable": "no-console ",
+    "eslint-disable": "no-console",
   },
 };
