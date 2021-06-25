@@ -45,10 +45,10 @@ const Menus: FC<MenusProps> = ({
               {icon}
               <p className="menu-text'">{text}</p>
             </MenuItem>
-          );
+          )
         })
-      };
-    </MenusWrapper>);
+      }
+    </MenusWrapper>)
 };
 
 export default Menus;

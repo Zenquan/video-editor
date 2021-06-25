@@ -40,7 +40,7 @@ const ResourceContent: FC<ResourceContentProps> = ({
       return (
         <div>
           {/* <input type="file" id="uploader" onChange={(e: any) => transcode(e)}/> */}
-          <Button>本地上传视频</Button>
+          {/* <Button>本地上传视频</Button> */}
           <VideoCover videoList={resourceList}/>
         </div>
       );

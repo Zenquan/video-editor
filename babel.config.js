@@ -1,7 +1,7 @@
 module.exports = {
   presets: ["@babel/preset-env", "@babel/preset-react"],
   plugins: [
-    ["zent"],
+    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
     "syntax-dynamic-import",
     [
       "babel-plugin-styled-components",

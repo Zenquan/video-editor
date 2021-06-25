@@ -37,9 +37,9 @@ const devConfig = Object.assign(baseConfig, {
     port: process.env.PORT || 5000,
     hot: true,
     proxy: {
-      '/api/activity': {
-        target: 'http://h5-activity.dubbox.test.thejoyrun.com',
-        pathRewrite: { '^/api/activity': '', },
+      '/api': {
+        target: 'http://localhost:3000',
+        pathRewrite: { '^/api': '', },
         secure: false,
         changeOrigin: true,
       },
