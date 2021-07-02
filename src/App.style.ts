@@ -16,6 +16,15 @@ const GlobalStyle = createGlobalStyle`
     height: 24px;
     line-height: 24px;
   }
+  .flex-all-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .loading {
+    width: 100%;
+    min-height: 100vh;
+  }
 `;
 
 export {

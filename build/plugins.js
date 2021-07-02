@@ -14,14 +14,14 @@ const basePlugins = [
 
 const devPlugins = [
   new HtmlWebpackPlugin({
-    title: 'Hello react + ts',
+    title: '你好，欢迎使用视频编辑器 react + ts',
     template: resolve('public/index.html')
   }),
 ];
 
 const prodPlugins = [
   new HtmlWebpackPlugin({
-    title: 'Hello react + ts',
+    title: '你好，欢迎使用视频编辑器 react + ts',
     template: resolve('public/index.html'),
     env: 'production',
     minify: true,

@@ -1,8 +1,9 @@
 module.exports = {
-  presets: ["@babel/preset-env", "@babel/preset-react"],
+  presets: ["@babel/preset-env", "@babel/preset-react", "mobx"],
   plugins: [
-    ["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }],
     "syntax-dynamic-import",
+    // ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    // "transform-decorators-legacy",
     [
       "babel-plugin-styled-components",
       {

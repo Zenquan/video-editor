@@ -18,7 +18,7 @@ import {
 
 const Home: FC = observer(() => {
   const [currentMenu, setCurrentMenu] = useState<number>(0);
-  const [videoSrc, setVideoSrc] = useState<string>('http://www.w3schools.com/html/mov_bbb.mp4');
+  const [videoSrc, setVideoSrc] = useState<string>('');
   const [resourceList, setResourceList] = useState<
   Array<{
     url: string;
@@ -128,8 +128,8 @@ const Home: FC = observer(() => {
   ];
 
   const fetch = async () => {
-    const resourceList = await home.getlist();
-    console.log("resourceList>>>", resourceList);
+    // const resourceList = await home.getlist();
+    // console.log("resourceList>>>", resourceList);
     setResourceList([
       {
         "url": "http://qugsjkhq2.hn-bkt.clouddn.com/mov_bbb.mp4_preview.jpg",
@@ -174,6 +174,12 @@ const Home: FC = observer(() => {
       ])
     };
   };
+
+  useEffect(() => {
+    const video = homeStore.getVideoSrc()
+    console.log('video>>>', video);
+    setVideoSrc(video)
+  }, [videoSrc])
 
   useEffect(() => {
     fetch();

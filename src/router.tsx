@@ -1,8 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { Router, Switch, Route } from "react-router-dom";
 import { history } from 'utils';
-import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
 import random from 'number-random';
 
 const routes: Array<{component: any, path?: string}> = [
@@ -17,17 +15,12 @@ const routes: Array<{component: any, path?: string}> = [
   }
 ];
 
-
-const antIcon = <LoadingOutlined style={{ fontSize: 24, }} spin />;
-
 export default function AppRouter () {
   return (
     <Router history={history}>
       <Suspense fallback={
-        <Spin indicator={antIcon}
-          size="large"
-          tip="加载中"/>
-      }>
+          <div>111</div>
+        }>
         <Switch>
           {routes &&
             routes.map((
