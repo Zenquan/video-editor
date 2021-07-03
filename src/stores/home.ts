@@ -1,8 +1,7 @@
-import { makeAutoObservable, observable, action, computed } from "mobx";
+import { makeAutoObservable } from "mobx";
 
 class HomeStore {
   isActive = false
-  // @observable
   videoSrc = ''
 
   constructor() {
@@ -17,15 +16,11 @@ class HomeStore {
     return this.isActive
   }
 
-  // @action
   setVideoSrc (value: string) {
-    console.log('set videoSrc>>>', value);
     this.videoSrc = value
   }
 
-  // @computed
   getVideoSrc () {
-    console.log('get videoSrc>>>', this.videoSrc);
     return this.videoSrc
   }
 }

@@ -4,6 +4,7 @@ const webpack = require('webpack'),
   FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin'),
   BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin,
   WebpackBar = require("webpackbar"),
+  path = require('path'),
   { isProd } = require('./utils');
 
 const basePlugins = [
@@ -15,7 +16,7 @@ const basePlugins = [
 const devPlugins = [
   new HtmlWebpackPlugin({
     title: '你好，欢迎使用视频编辑器 react + ts',
-    template: resolve('public/index.html')
+    template: resolve('public/index.html'),
   }),
 ];
 

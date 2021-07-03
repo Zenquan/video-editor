@@ -176,10 +176,8 @@ const Home: FC = observer(() => {
   };
 
   useEffect(() => {
-    const video = homeStore.getVideoSrc()
-    console.log('video>>>', video);
-    setVideoSrc(video)
-  }, [videoSrc])
+    setVideoSrc(homeStore.getVideoSrc())
+  }, [homeStore.getVideoSrc()])
 
   useEffect(() => {
     fetch();

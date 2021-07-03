@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { observer } from "mobx-react";
 import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 import { ResourceContentWrapper } from './index.style';
 import VideoCover from '../VideoCover';
@@ -13,13 +14,16 @@ interface ResourceContentProps {
   resourceList: Array<resourceType>
 }
 
-const ResourceContent: FC<ResourceContentProps> = ({
+const ResourceContent: FC<ResourceContentProps> = observer(({
   currentMenu,
   resourceList,
 }: ResourceContentProps) => {
 
   const renderResourceContent = (currentMenu: number) => {
-    const ffmpeg = createFFmpeg({ log: true, });
+    // const { createFFmpeg, fetchFile } = (window as any).FFmpeg;
+    const ffmpeg = createFFmpeg({
+      log: true,
+    });
     const transcode = async ({
       target: { files, },
     }: {
@@ -31,8 +35,9 @@ const ResourceContent: FC<ResourceContentProps> = ({
       await ffmpeg.run("-i", name, "output.mp4");
       const data = ffmpeg.FS("readFile", "output.mp4");
       const videoSrc = URL.createObjectURL(new Blob([data.buffer], { type: "video/mp4", }))
-      console.log('videoSrc>>>', videoSrc);
-      homeStore.setVideoSrc(videoSrc);
+      await homeStore.setVideoSrc(videoSrc);
+      await ffmpeg.run("-i", name, "-r", 1, "-f", "image2", './img/1.jpeg')
+      console.log('1>>>');
     };
 
     if (!currentMenu) {
@@ -51,6 +56,6 @@ const ResourceContent: FC<ResourceContentProps> = ({
       {renderResourceContent(currentMenu)}
     </ResourceContentWrapper>
   );
-};
+});
 
 export default ResourceContent;

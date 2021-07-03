@@ -35,7 +35,18 @@ function renderTime(time: number): string {
   return `${addZero(minute)}:${addZero(secondsString)}:${addZero(ms > 340 ? ms - 340 : ms).slice(0, 2)}`
 }
 
+const injectScript = (url: string, fn: Function) => {
+  const script = document.createElement('script');
+  script.src = url;
+  script.async = true;
+  script.onload = function () {
+      fn && fn();
+  };
+  document.body.appendChild(script);
+};
+
 export {
   addZero,
-  renderTime
+  renderTime,
+  injectScript
 }
