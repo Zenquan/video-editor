@@ -36,8 +36,8 @@ const ResourceContent: FC<ResourceContentProps> = observer(({
       const data = ffmpeg.FS("readFile", "output.mp4");
       const videoSrc = URL.createObjectURL(new Blob([data.buffer], { type: "video/mp4", }))
       await homeStore.setVideoSrc(videoSrc);
-      await ffmpeg.run("-i", name, "-r", 1, "-f", "image2", './img/1.jpeg')
-      console.log('1>>>');
+      // await ffmpeg.run("-i", name, "-r", "1", "-f", "image2", './img/1.jpeg')
+      // console.log('1>>>');
     };
 
     if (!currentMenu) {
